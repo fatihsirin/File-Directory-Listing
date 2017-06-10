@@ -15,6 +15,7 @@
 #include <dirent.h>
 
 class listing {
+public:
     listing();
     listing(char *p);
     char *GetCurrentDir();
