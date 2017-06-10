@@ -57,8 +57,6 @@ permOfFile(mode_t mode)
 }
 
 
-
-
 listing::listing() {
     path=GetCurrentDir();
 }
@@ -138,20 +136,20 @@ int listing::FileInfo(char *p, char *fname){
         std::cout << "*****" << std::endl;
         std::cout << "-> " << fname << std::endl;
         std::cout << "\tSize: "<< sb.st_size << std::endl;
-        std::cout << "\tPermissions: "<< sb.st_mode << std::endl;
+        std::cout << "\tPermissions: "<< (sb.st_mode & 07777) << std::endl;
     }
     else if (print == 4){
         std::cout << "*****" << std::endl;
         std::cout << "-> " << fname << std::endl;
-        std::cout << "\ttime of last access: "<< sb.st_atime <<":"<< ctime(&sb.st_atime)<< std::endl;
-        std::cout << "\ttime of last modification: "<< sb.st_mtime <<":"<< ctime(&sb.st_mtime)<< std::endl;
-        std::cout << "\ttime of last change: "<< sb.st_ctime <<":"<< ctime(&sb.st_ctime)<< std::endl;
+        std::cout << "\ttime of last access: "<< sb.st_atime <<":"<< ctime(&sb.st_atime);
+        std::cout << "\ttime of last modification: "<< sb.st_mtime <<":"<< ctime(&sb.st_mtime);
+        std::cout << "\ttime of last change: "<< sb.st_ctime <<":"<< ctime(&sb.st_ctime);
     }
     else if (print == 5){
         std::cout << "-> " << fname << std::endl;
         std::cout << "\tDevice: "<< sb.st_dev << std::endl;
         std::cout << "\tInode: "<< sb.st_ino << std::endl;
-        std::cout << "\tProtection: "<< sb.st_mode << std::endl;
+        std::cout << "\tPermissions: "<< (sb.st_mode & 07777) << std::endl;
         std::cout << "\tNumber of hard links: "<< sb.st_nlink << std::endl;
         std::cout << "\tUser ID of owner: "<< sb.st_uid << std::endl;
         std::cout << "\tGroup ID of owner: "<< sb.st_gid << std::endl;

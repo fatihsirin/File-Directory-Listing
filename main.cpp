@@ -57,11 +57,13 @@ int main(int argc, char **argv) {
         t=new listing(path);
     }
 
-    t->print=p;
+    //t->print=p;
+    t->print=5;
+    t->path="/home/n0pe/Desktop/apue.pdf";
     t->ShowDirContent(t->path);
 
 
 
-    delete []t;
+    delete t;
     return 0;
 }
