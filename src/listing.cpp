@@ -62,11 +62,17 @@ listing::listing() {
 }
 
 listing::listing(char *p) {
-    path = (char *)malloc(sizeof(p));
-    memset(path,0,sizeof(path));
-    //memcpy(path,p,sizeof(path));
-    strcpy(path,p);
-    std::cout<<path;
+
+    try{
+        path = new char[strlen(p)];
+        strncpy(path,p,strlen(p));
+    }catch (std::bad_alloc& ba) {
+        std::cerr<<"bad_alloc caught: "<< ba.what() << std::endl;
+    }
+}
+
+listing::~listing() {
+    delete path;
 }
 
 char *listing::GetCurrentDir(){
@@ -79,7 +85,6 @@ char *listing::GetCurrentDir(){
 
 void listing::ShowDirContent(char *p){
 
-
     DIR *d = opendir(p);
     if (d==NULL) {
         //verilen string path değil. Dosya testini yap
@@ -91,22 +96,19 @@ void listing::ShowDirContent(char *p){
 
     }
     else{
-        char *fullpath = (char *)malloc(PATH_MAX);
-        if (fullpath == NULL) {
-            /* deal with error and exit */
-            DEBUG_ERROR("fullpath malloc error\n");
-            exit(1);
+        char *fullpath;
+        try{
+            fullpath = new char[PATH_MAX];
+        }catch (std::bad_alloc& ba) {
+            std::cerr<<"bad_alloc caught: "<< ba.what() << std::endl;
         }
         struct dirent *dir;
         while ((dir = readdir(d)) != NULL) {
-            //std::cout<<dir->d_name<<std::endl;
-
             sprintf(fullpath, "%s/%s", path, dir->d_name);
-            //std::cout<<fullpath<<std::endl;
             FileInfo(fullpath,dir->d_name);
             memset( fullpath, '\0', sizeof(path)+sizeof(dir->d_name)+2);
         }
-        free(fullpath);
+        delete []fullpath;
         closedir(d);
     }
 
@@ -114,7 +116,7 @@ void listing::ShowDirContent(char *p){
 
 int listing::FileInfo(char *p, char *fname){
     if((stat(p, &sb)) == -1) {
-        perror("fstat");
+        perror("stat");
         return -1;
     }
 
@@ -149,7 +151,7 @@ int listing::FileInfo(char *p, char *fname){
         std::cout << "-> " << fname << std::endl;
         std::cout << "\tDevice: "<< sb.st_dev << std::endl;
         std::cout << "\tInode: "<< sb.st_ino << std::endl;
-        std::cout << "\tPermissions: "<< (sb.st_mode & 07777) << std::endl;
+        std::cout << "\tPermissions: "<< sb.st_mode  << std::endl;
         std::cout << "\tNumber of hard links: "<< sb.st_nlink << std::endl;
         std::cout << "\tUser ID of owner: "<< sb.st_uid << std::endl;
         std::cout << "\tGroup ID of owner: "<< sb.st_gid << std::endl;
@@ -171,7 +173,7 @@ int listing::FileInfo(char *p, char *fname){
             case S_IFSOCK: std::cout<<"\t\tsocket"<< std::endl;                 break;
             default:       std::cout<<"\t\tunknown?"<< std::endl;               break;
         }
-        printf("Permission Bits:    %s (%04o)\n", permOfFile(sb.st_mode),
+        printf("\tPermission Bits:    %s (%04o)\n", permOfFile(sb.st_mode),
                sb.st_mode & 07777);
 
     }

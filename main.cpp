@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
         }
     }
 
-    if (count!=1){
+    if (count>1){
         fprintf (stderr, "Birden fazla option girildi ya da geçerli parametre girilmedi.\n");
     }
 
@@ -56,10 +56,7 @@ int main(int argc, char **argv) {
     else{
         t=new listing(path);
     }
-
-    //t->print=p;
-    t->print=5;
-    t->path="/home/n0pe/Desktop/apue.pdf";
+    t->print=p;
     t->ShowDirContent(t->path);
 
 

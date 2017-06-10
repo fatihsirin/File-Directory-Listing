@@ -18,11 +18,12 @@ class listing {
 public:
     listing();
     listing(char *p);
+    ~listing();
     char *GetCurrentDir();
     void ShowDirContent(char * p);
 
     int FileInfo(char *p,char *fname);
-    char *path;
+    char *path=NULL;
     int print=0;
     /*****
      * print 0 ise sadece isimleri listele -< n
