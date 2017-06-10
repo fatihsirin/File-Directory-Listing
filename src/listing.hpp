@@ -21,7 +21,7 @@ public:
     char *GetCurrentDir();
     void ShowDirContent(char * p);
 
-    int FileInfo(char *p);
+    int FileInfo(char *p,char *fname);
     char *path;
     int print=0;
     /*****
