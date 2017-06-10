@@ -16,7 +16,6 @@ listing::listing(char *p) {
     //memcpy(path,p,sizeof(path));
     strcpy(path,p);
     std::cout<<path;
-    ShowDirContent(path);
 }
 
 char *listing::GetCurrentDir(){
@@ -67,7 +66,6 @@ void listing::ShowDirContent(char *p){
 int listing::FileInfo(char *p){
     if((stat(p, &sb)) == -1) {
         perror("fstat");
-
         return -1;
     }
 
