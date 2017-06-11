@@ -6,20 +6,6 @@
 #include "debug.h"
 
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <dirent.h>
-#include <pwd.h>
-#include <grp.h>
-#include <time.h>
-#include <locale.h>
-#include <langinfo.h>
-#include <stdio.h>
-#include <stdint.h>
-
-
-
-
 char *
 permOfFile(mode_t mode)
 {

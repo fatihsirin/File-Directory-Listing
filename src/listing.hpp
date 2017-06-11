@@ -13,6 +13,9 @@
 #include <string.h>
 #include <linux/limits.h>
 #include <dirent.h>
+#include <pwd.h>
+#include <grp.h>
+
 
 class listing {
 public:
