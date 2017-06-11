@@ -2,6 +2,14 @@
 #include <unistd.h>
 #include "src/listing.hpp"
 
+void help(){
+    std::cout   <<"* if -n 1print just names 					\n"
+                <<"* if -s print names and sizes                 \n"
+                <<"* if -p print names and permissions       	\n"
+                <<"* if -d print names, sizes, permissions   	\n"
+                <<"* if -t print time information        		\n"
+                <<"* if -a print all information             	\n"
+                 ;};
 
 int main(int argc, char **argv) {
 
@@ -12,8 +20,12 @@ int main(int argc, char **argv) {
     opterr = 0;
     listing *t =NULL;
 
-    while ((c=getopt(argc,argv,"nspdtai:")) != -1) {
+    while ((c=getopt(argc,argv,"hnspdtai:")) != -1) {
         switch (c) {
+            case 'h':
+                help();
+                exit(1);
+                break;
             case 'n':
                 p = 0;
                 count +=1;
