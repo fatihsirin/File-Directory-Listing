@@ -4,7 +4,19 @@
 
 #include "listing.hpp"
 #include "debug.h"
+
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <pwd.h>
+#include <grp.h>
 #include <time.h>
+#include <locale.h>
+#include <langinfo.h>
+#include <stdio.h>
+#include <stdint.h>
+
 
 
 
@@ -119,6 +131,22 @@ int listing::FileInfo(char *p, char *fname){
         perror("stat");
         return -1;
     }
+    struct passwd  *pwd;
+    struct group   *grp;
+    char *pw_name;
+    char *gr_name;
+
+    /* Print out owner's name if it is found using getpwuid(). */
+    if ((pwd = getpwuid(sb.st_uid)) != NULL)
+        pw_name=pwd->pw_name;
+    else
+        pw_name =NULL;
+
+    /* Print out group name if it is found using getgrgid(). */
+    if ((grp = getgrgid(sb.st_gid)) != NULL)
+        gr_name= grp->gr_name;
+    else
+        gr_name=NULL;
 
     if (print == 0) {
         std::cout << "*****" << std::endl;
@@ -128,17 +156,23 @@ int listing::FileInfo(char *p, char *fname){
         std::cout << "*****" << std::endl;
         std::cout << "-> " << fname << std::endl;
         std::cout << "\tSize: "<< sb.st_size << std::endl;
+        std::cout << "\tOwner's name: " << pw_name <<std::endl;
+        std::cout << "\tGroup's name: " << gr_name <<std::endl;
     }
     else if (print == 2){
         std::cout << "*****" << std::endl;
         std::cout << "-> " << fname << std::endl;
         std::cout << "\tSize: "<< sb.st_size << std::endl;
+        std::cout << "\tUser ID of owner: " << sb.st_uid << "->" << pw_name << std::endl;
+        std::cout << "\tGroup ID of owner: " << sb.st_gid << "->" <<gr_name << std::endl;
     }
     else if (print == 3){
         std::cout << "*****" << std::endl;
         std::cout << "-> " << fname << std::endl;
         std::cout << "\tSize: "<< sb.st_size << std::endl;
         std::cout << "\tPermissions: "<< (sb.st_mode & 07777) << std::endl;
+        std::cout << "\tUser ID of owner: " << sb.st_uid << "->" << pw_name << std::endl;
+        std::cout << "\tGroup ID of owner: " << sb.st_gid << "->" <<gr_name << std::endl;
     }
     else if (print == 4){
         std::cout << "*****" << std::endl;
@@ -149,19 +183,19 @@ int listing::FileInfo(char *p, char *fname){
     }
     else if (print == 5){
         std::cout << "-> " << fname << std::endl;
-        std::cout << "\tDevice: "<< sb.st_dev << std::endl;
-        std::cout << "\tInode: "<< sb.st_ino << std::endl;
-        std::cout << "\tPermissions: "<< sb.st_mode  << std::endl;
+        std::cout << "\tDevice: " << sb.st_dev << std::endl;
+        std::cout << "\tInode: " << sb.st_ino << std::endl;
+        std::cout << "\tPermissions: " << sb.st_mode  << std::endl;
         std::cout << "\tNumber of hard links: "<< sb.st_nlink << std::endl;
-        std::cout << "\tUser ID of owner: "<< sb.st_uid << std::endl;
-        std::cout << "\tGroup ID of owner: "<< sb.st_gid << std::endl;
-        std::cout << "\tDevice type (if inode device): "<< sb.st_rdev << std::endl;
-        std::cout << "\ttotal size, in bytes: "<< sb.st_size << std::endl;
-        std::cout << "\tblocksize for filesystem I/O "<< sb.st_blksize << std::endl;
-        std::cout << "\tnumber of blocks allocated "<< sb.st_blocks << std::endl;
-        std::cout << "\ttime of last access: "<< sb.st_atime <<":"<< ctime(&sb.st_atime);
-        std::cout << "\ttime of last modification: "<< sb.st_mtime <<":"<< ctime(&sb.st_mtime);
-        std::cout << "\ttime of last change: "<< sb.st_ctime <<":"<< ctime(&sb.st_ctime);
+        std::cout << "\tUser ID of owner: " << sb.st_uid << "->" << pw_name << std::endl;
+        std::cout << "\tGroup ID of owner: " << sb.st_gid << "->" <<gr_name << std::endl;
+        std::cout << "\tDevice type (if inode device): " << sb.st_rdev << std::endl;
+        std::cout << "\ttotal size, in bytes: " << sb.st_size << std::endl;
+        std::cout << "\tblocksize for filesystem I/O " << sb.st_blksize << std::endl;
+        std::cout << "\tnumber of blocks allocated " << sb.st_blocks << std::endl;
+        std::cout << "\ttime of last access: " << sb.st_atime <<":"<< ctime(&sb.st_atime);
+        std::cout << "\ttime of last modification: " << sb.st_mtime <<":"<< ctime(&sb.st_mtime);
+        std::cout << "\ttime of last change: " << sb.st_ctime <<":"<< ctime(&sb.st_ctime);
 
         switch (sb.st_mode & S_IFMT) {
             case S_IFBLK:  std::cout<<"\t\tblock device"<< std::endl;   		break;
